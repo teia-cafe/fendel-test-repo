@@ -425,3 +425,32 @@ h1 {
   text-align: right;
   overflow-wrap: anywhere;
 }
+
+.toggle {
+  flex: 0 1 auto;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.toggle:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.toggle:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.toggle-on {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #06201b;
+  font-weight: 600;
+}

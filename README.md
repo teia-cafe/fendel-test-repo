@@ -78,6 +78,11 @@ Note that roughly a quarter of the gallery is purchasable at any time (85 of 300
 checked, median ꜩ6), and very little of it is among the newest mints — freshly minted pieces are
 usually listed later, if at all. A piece with no listing says so.
 
+Because of that imbalance there is a **For sale** filter beside the platform dropdown, which is
+the practical way to browse what can actually be bought. It combines with the platform and search
+filters, and the platform counts follow it. It stays disabled until prices have loaded, since
+until then the site genuinely does not know what is for sale.
+
 The wallet SDK is loaded on demand rather than up front: Taquito and Beacon together outweigh the
 rest of the site many times over, and most visitors only ever look. The initial bundle is about
 73 KB gzipped; the wallet chunks arrive only when someone connects.

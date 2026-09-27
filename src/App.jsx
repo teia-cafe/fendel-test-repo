@@ -17,6 +17,7 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [address, setAddress] = useState(null);
   const [listings, setListings] = useState(null);
+  const [forSaleOnly, setForSaleOnly] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}mints/index.json`)
@@ -42,19 +43,29 @@ export default function App() {
       .catch(() => setListings(new Map()));
   }, [snapshot]);
 
+  const forSale = useMemo(() => {
+    if (!snapshot) return [];
+    if (!forSaleOnly) return snapshot.mints;
+    return snapshot.mints.filter((mint) => listings?.has(mint.id));
+  }, [snapshot, listings, forSaleOnly]);
+
+  const saleCount = useMemo(
+    () => (snapshot && listings ? snapshot.mints.filter((m) => listings.has(m.id)).length : 0),
+    [snapshot, listings],
+  );
+
   const platforms = useMemo(() => {
     if (!snapshot) return [];
-    const counts = new Map();
-    for (const mint of snapshot.mints) {
-      counts.set(mint.platform, (counts.get(mint.platform) || 0) + 1);
-    }
+    // Every platform stays listed whatever the filters say, so the dropdown
+    // never loses the option it is currently set to; only the counts move.
+    const counts = new Map(snapshot.mints.map((mint) => [mint.platform, 0]));
+    for (const mint of forSale) counts.set(mint.platform, counts.get(mint.platform) + 1);
     return [...counts].sort((a, b) => b[1] - a[1]);
-  }, [snapshot]);
+  }, [snapshot, forSale]);
 
   const visible = useMemo(() => {
-    if (!snapshot) return [];
     const needle = query.trim().toLowerCase();
-    return snapshot.mints.filter((mint) => {
+    return forSale.filter((mint) => {
       if (platform !== 'all' && mint.platform !== platform) return false;
       if (!needle) return true;
       return (
@@ -62,7 +73,7 @@ export default function App() {
         mint.creators.some((c) => (c.alias || c.address).toLowerCase().includes(needle))
       );
     });
-  }, [snapshot, platform, query]);
+  }, [forSale, platform, query]);
 
   if (error) {
     return (
@@ -106,13 +117,26 @@ export default function App() {
             }}
             aria-label="Platform"
           >
-            <option value="all">All platforms ({snapshot.count})</option>
+            <option value="all">All platforms ({forSale.length})</option>
             {platforms.map(([name, count]) => (
               <option key={name} value={name}>
                 {name} ({count})
               </option>
             ))}
           </select>
+
+          <button
+            className={forSaleOnly ? 'toggle toggle-on' : 'toggle'}
+            type="button"
+            aria-pressed={forSaleOnly}
+            disabled={!listings}
+            onClick={() => {
+              setForSaleOnly((on) => !on);
+              setShown(PAGE);
+            }}
+          >
+            {listings ? `For sale (${saleCount})` : 'Loading prices…'}
+          </button>
         </div>
       </header>
 
