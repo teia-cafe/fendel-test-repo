@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 
 import TokenCard from './components/TokenCard.jsx';
 import TokenDetail from './components/TokenDetail.jsx';
+import WalletButton from './components/WalletButton.jsx';
+import { fetchListings } from './listings.js';
+import { restoreConnection } from './tezos.js';
 
 const PAGE = 48;
 
@@ -12,6 +15,8 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [shown, setShown] = useState(PAGE);
   const [selected, setSelected] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [listings, setListings] = useState(null);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}mints/index.json`)
@@ -22,6 +27,20 @@ export default function App() {
       .then(setSnapshot)
       .catch((err) => setError(err.message));
   }, []);
+
+  // Pick up a wallet the visitor already paired, without prompting them.
+  useEffect(() => {
+    restoreConnection().then(setAddress).catch(() => {});
+  }, []);
+
+  // Prices must be live: a snapshot price would offer purchases that fail.
+  // Failing to load them leaves the gallery browsable, just without prices.
+  useEffect(() => {
+    if (!snapshot) return;
+    fetchListings(snapshot.mints)
+      .then(setListings)
+      .catch(() => setListings(new Map()));
+  }, [snapshot]);
 
   const platforms = useMemo(() => {
     if (!snapshot) return [];
@@ -59,7 +78,10 @@ export default function App() {
   return (
     <>
       <header className="header">
-        <h1>Fully On-Chain</h1>
+        <div className="header-top">
+          <h1>Fully On-Chain</h1>
+          <WalletButton address={address} onChange={setAddress} />
+        </div>
         <p className="tagline">
           Recent Tezos mints whose artwork lives entirely in contract storage — no IPFS, no CDN.
           These {snapshot.count} pieces are served from this site as the bytes the chain holds.
@@ -100,7 +122,12 @@ export default function App() {
         ) : (
           <div className="grid">
             {visible.slice(0, shown).map((mint) => (
-              <TokenCard key={mint.id} mint={mint} onOpen={setSelected} />
+              <TokenCard
+                key={mint.id}
+                mint={mint}
+                listing={listings?.get(mint.id)}
+                onOpen={setSelected}
+              />
             ))}
           </div>
         )}
@@ -123,7 +150,15 @@ export default function App() {
         </a>
       </footer>
 
-      {selected && <TokenDetail mint={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <TokenDetail
+          mint={selected}
+          listing={listings?.get(selected.id)}
+          address={address}
+          onConnected={setAddress}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </>
   );
 }

@@ -294,3 +294,134 @@ h1 {
   color: var(--muted);
   font-size: 0.8rem;
 }
+
+/* ---------- wallet & buying ---------- */
+
+.header-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wallet {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.wallet:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.wallet:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.wallet-connected {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.wallet-hint {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card-frame {
+  position: relative;
+}
+
+.card-price {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  background: rgb(0 0 0 / 72%);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.buy {
+  margin-top: 1.25rem;
+}
+
+.buy-action {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #06201b;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.buy-action:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.buy-action:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.buy-note {
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.buy-none {
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.buy-done {
+  margin: 0 0 0.35rem;
+  color: var(--accent);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.buy-error {
+  margin: 0.6rem 0 0;
+  color: #ff8a80;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.wallet-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  max-width: 18rem;
+}
+
+.wallet-error {
+  margin: 0;
+  color: #ff8a80;
+  font-size: 0.72rem;
+  text-align: right;
+  overflow-wrap: anywhere;
+}

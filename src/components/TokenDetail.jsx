@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 
 import Artifact from './Artifact.jsx';
+import BuyButton from './BuyButton.jsx';
 
 const kb = (bytes) => `${(bytes / 1024).toFixed(1)} KB`;
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
-export default function TokenDetail({ mint, onClose }) {
+export default function TokenDetail({ mint, listing, address, onConnected, onClose }) {
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -42,6 +43,8 @@ export default function TokenDetail({ mint, onClose }) {
           </p>
 
           {mint.description && <p className="detail-description">{mint.description}</p>}
+
+          <BuyButton listing={listing} address={address} onConnected={onConnected} />
 
           <dl>
             <dt>Platform</dt>

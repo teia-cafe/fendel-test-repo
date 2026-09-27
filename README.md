@@ -58,6 +58,30 @@ and frame it with `sandbox="allow-scripts allow-same-origin"`. The artwork then 
 origin to play in and still cannot reach this one. That needs a second domain, which GitHub Pages
 alone cannot provide.
 
+## Wallet and buying
+
+Connect a Tezos wallet (Kukai, Temple, Umami, or anything Beacon supports) and buy pieces that
+their holders have listed. There is **no marketplace contract of our own**: the art here belongs
+to other people and is already listed on objkt.com, so a purchase fulfils that listing through
+objkt's marketplace contract [`KT1SwbTqhSKF6Pdokiu1K4Fpi17ahPPzmt1X`](https://tzkt.io/KT1SwbTqhSKF6Pdokiu1K4Fpi17ahPPzmt1X).
+Sellers and artists are paid exactly as they would be on objkt; this site takes no fee and never
+holds funds.
+
+The `fulfill_ask` parameters were verified against the live contract schema before shipping, and
+the listing id the objkt API calls `bigmap_key` is the contract's own `ask_id`.
+
+Prices are the one thing not baked into the snapshot — a listing can sell or be retracted at any
+moment, and a stale price offers a purchase that will fail. They are fetched live on load. Only
+tez-denominated listings are offered; other currencies would need a token allowance flow.
+
+Note that roughly a quarter of the gallery is purchasable at any time (85 of 300 when last
+checked, median ꜩ6), and very little of it is among the newest mints — freshly minted pieces are
+usually listed later, if at all. A piece with no listing says so.
+
+The wallet SDK is loaded on demand rather than up front: Taquito and Beacon together outweigh the
+rest of the site many times over, and most visitors only ever look. The initial bundle is about
+73 KB gzipped; the wallet chunks arrive only when someone connects.
+
 ## Running it
 
 ```bash
