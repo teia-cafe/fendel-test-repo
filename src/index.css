@@ -1,0 +1,296 @@
+/* A gallery for on-chain art: neutral dark ground, chrome kept quiet so the
+ * work carries the page. Deliberately single-theme — art reads consistently
+ * against one background rather than shifting with the viewer's setting. */
+
+:root {
+  --bg: #0b0b0d;
+  --surface: #15151a;
+  --line: #26262e;
+  --text: #edecf0;
+  --muted: #8b8b99;
+  --accent: #7dd3c0;
+
+  color-scheme: dark;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0 clamp(1rem, 4vw, 3rem) 4rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- header ---------- */
+
+.header {
+  max-width: 62ch;
+  padding: clamp(2.5rem, 7vw, 5rem) 0 2rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.tagline {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.controls input,
+.controls select {
+  flex: 1 1 14rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.controls input:focus-visible,
+.controls select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ---------- grid ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.card-frame {
+  display: block;
+  aspect-ratio: 1;
+  background: #000;
+}
+
+.artifact {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: contain;
+  /* Most on-chain pixel work is tiny and meant to scale without smoothing. */
+  image-rendering: pixelated;
+}
+
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.7rem 0.8rem 0.8rem;
+  min-width: 0;
+}
+
+.card-name,
+.card-artist,
+.card-platform {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.card-artist {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.card-platform {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.more {
+  display: block;
+  margin: 2.5rem auto 0;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.more:hover {
+  border-color: var(--accent);
+}
+
+/* ---------- detail ---------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.5rem, 3vw, 2rem);
+  background: rgb(0 0 0 / 82%);
+  overflow-y: auto;
+}
+
+.detail {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 0;
+  width: min(72rem, 100%);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+@media (max-width: 52rem) {
+  .detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detail-stage {
+  aspect-ratio: 1;
+  background: #000;
+}
+
+.detail-info {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  overflow-wrap: anywhere;
+}
+
+.detail-info h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.detail-artists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+}
+
+.detail-description {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.detail-info dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  margin: 1.5rem 0 0;
+  font-size: 0.85rem;
+}
+
+.detail-info dt {
+  color: var(--muted);
+}
+
+.detail-info dd {
+  margin: 0;
+}
+
+.close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.6rem;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 55%);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: rgb(0 0 0 / 85%);
+}
+
+/* ---------- states ---------- */
+
+.state {
+  padding: 5rem 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.hint {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85rem;
+}
+
+.footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
